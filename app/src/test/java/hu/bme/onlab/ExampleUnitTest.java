@@ -1,4 +1,4 @@
-package hu.bme.onlab.onlab2;
+package hu.bme.onlab;
 
 import org.junit.Test;
 

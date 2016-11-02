@@ -1,4 +1,4 @@
-package hu.bme.onlab.onlab2;
+package hu.bme.onlab;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

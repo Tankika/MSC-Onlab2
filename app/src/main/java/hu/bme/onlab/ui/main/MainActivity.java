@@ -1,8 +1,9 @@
-package hu.bme.onlab.onlab2;
+package hu.bme.onlab.ui.main;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Base64;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,17 +14,28 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.crashlytics.android.Crashlytics;
+
+import hu.bme.onlab.model.User;
+import hu.bme.onlab.network.NetworkConfig;
+import hu.bme.onlab.network.UserApi;
+import hu.bme.onlab.onlab2.R;
 import io.fabric.sdk.android.Fabric;
+import io.fabric.sdk.android.services.network.HttpRequest;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements MainScreen, NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar =  (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -43,6 +55,26 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(NetworkConfig.host)
+                .build();
+
+        UserApi userApi = retrofit.create(UserApi.class);
+
+        String authorization = "Basic " + Base64.encodeToString("user@test.hu:password".getBytes(), Base64.NO_WRAP);
+        userApi.getUser(authorization).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override
