@@ -44,6 +44,8 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.4.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'io.swagger:swagger-annotations:1.5.10'
+    compile 'org.greenrobot:eventbus:3.0.0'
     provided 'org.glassfish:javax.annotation:10.0-b28'
     testCompile 'junit:junit:4.12'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {

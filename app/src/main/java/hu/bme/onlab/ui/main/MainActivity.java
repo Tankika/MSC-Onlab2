@@ -15,6 +15,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.crashlytics.android.Crashlytics;
 
+import java.util.List;
+
+import hu.bme.onlab.interactor.main.UserInteractor;
+import hu.bme.onlab.model.Post;
 import hu.bme.onlab.model.User;
 import hu.bme.onlab.network.NetworkConfig;
 import hu.bme.onlab.network.UserApi;
@@ -56,25 +60,21 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        new UserInteractor().getUser();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(NetworkConfig.host)
-                .build();
+        MainPresenter.getInstance().listPosts();
+    }
 
-        UserApi userApi = retrofit.create(UserApi.class);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MainPresenter.getInstance().attachScreen(this);
+    }
 
-        String authorization = "Basic " + Base64.encodeToString("user@test.hu:password".getBytes(), Base64.NO_WRAP);
-        userApi.getUser(authorization).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-
-            }
-        });
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MainPresenter.getInstance().detachScreen();
     }
 
     @Override
@@ -132,5 +132,10 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void refreshPostList(List<Post> posts) {
+        System.out.println(posts);
     }
 }

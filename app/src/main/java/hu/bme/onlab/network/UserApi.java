@@ -7,6 +7,6 @@ import retrofit2.http.Header;
 
 public interface UserApi {
 
-    @GET("user/user")
+    @GET("user")
     public Call<User> getUser(@Header("Authorization") String authorization);
 }
