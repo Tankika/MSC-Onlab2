@@ -3,6 +3,8 @@ package hu.bme.onlab.ui.main;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -34,6 +36,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity
         implements MainScreen, NavigationView.OnNavigationItemSelectedListener {
 
+    private PostListAdapter postListAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +64,14 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        RecyclerView listPostRecyclerView = (RecyclerView) findViewById(R.id.post_list);
+        listPostRecyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        listPostRecyclerView.setLayoutManager(mLayoutManager);
+        postListAdapter = new PostListAdapter();
+        listPostRecyclerView.setAdapter(postListAdapter);
+
+        // TODO proper user loading and storing
         new UserInteractor().getUser();
 
         MainPresenter.getInstance().listPosts();
@@ -136,6 +148,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void refreshPostList(List<Post> posts) {
-        System.out.println(posts);
+        postListAdapter.getPosts().addAll(posts);
+        postListAdapter.notifyDataSetChanged();
     }
 }
