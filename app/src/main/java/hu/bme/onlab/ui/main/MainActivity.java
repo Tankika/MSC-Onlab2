@@ -1,11 +1,11 @@
 package hu.bme.onlab.ui.main;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,22 +21,14 @@ import java.util.List;
 
 import hu.bme.onlab.interactor.main.UserInteractor;
 import hu.bme.onlab.model.Post;
-import hu.bme.onlab.model.User;
-import hu.bme.onlab.network.NetworkConfig;
-import hu.bme.onlab.network.UserApi;
 import hu.bme.onlab.onlab2.R;
 import io.fabric.sdk.android.Fabric;
-import io.fabric.sdk.android.services.network.HttpRequest;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
         implements MainScreen, NavigationView.OnNavigationItemSelectedListener {
 
     private PostListAdapter postListAdapter;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,16 +63,15 @@ public class MainActivity extends AppCompatActivity
         postListAdapter = new PostListAdapter();
         listPostRecyclerView.setAdapter(postListAdapter);
 
-        // TODO proper user loading and storing
-        new UserInteractor().getUser();
-
-        MainPresenter.getInstance().listPosts();
+        progressDialog = new ProgressDialog(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         MainPresenter.getInstance().attachScreen(this);
+
+        MainPresenter.getInstance().init();
     }
 
     @Override
@@ -150,5 +141,18 @@ public class MainActivity extends AppCompatActivity
     public void refreshPostList(List<Post> posts) {
         postListAdapter.getPosts().addAll(posts);
         postListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void startLoading() {
+        progressDialog.setTitle("Loading");
+        progressDialog.setMessage("Wait while loading...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    @Override
+    public void stopLoading() {
+        progressDialog.dismiss();
     }
 }

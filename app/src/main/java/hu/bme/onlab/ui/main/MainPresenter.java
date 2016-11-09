@@ -4,20 +4,27 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.net.HttpURLConnection;
+
+import hu.bme.onlab.interactor.app.AppInteractor;
+import hu.bme.onlab.interactor.app.event.InitCallCompletedEvent;
 import hu.bme.onlab.interactor.post.PostInteractor;
 import hu.bme.onlab.interactor.post.event.ListPostsCallCompletedEvent;
+import hu.bme.onlab.model.ListPostsResponse;
 import hu.bme.onlab.ui.Presenter;
 
 public class MainPresenter extends Presenter<MainScreen> {
 
     private static MainPresenter instance;
 
+    private AppInteractor appInteractor;
     private PostInteractor postInteractor;
 
     private int page = 1;
     private int pageSize = 5;
 
     private MainPresenter() {
+        appInteractor = new AppInteractor();
         postInteractor = new PostInteractor();
     }
 
@@ -40,13 +47,30 @@ public class MainPresenter extends Presenter<MainScreen> {
         super.detachScreen();
     }
 
+    public void init() {
+        screen.startLoading();
+        appInteractor.init();
+    }
+
     public void listPosts() {
         postInteractor.listPosts(page, pageSize);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onListPostsCompleted(InitCallCompletedEvent event) {
+        if(event.getCode() == HttpURLConnection.HTTP_OK) {
+            listPosts();
+        }
+        screen.stopLoading();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onListPostsCompleted(ListPostsCallCompletedEvent event) {
-        screen.refreshPostList(event.getResponse().getPosts());
+        ListPostsResponse response = event.getResponse();
+
+        if(response != null) {
+            screen.refreshPostList(response.getPosts());
+        }
     }
 
 

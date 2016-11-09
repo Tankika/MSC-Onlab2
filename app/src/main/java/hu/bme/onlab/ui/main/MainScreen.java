@@ -7,4 +7,8 @@ import hu.bme.onlab.model.Post;
 public interface MainScreen {
 
     void refreshPostList(List<Post> posts);
+
+    void startLoading();
+
+    void stopLoading();
 }
