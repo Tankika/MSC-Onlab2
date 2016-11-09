@@ -19,7 +19,6 @@ import com.crashlytics.android.Crashlytics;
 
 import java.util.List;
 
-import hu.bme.onlab.interactor.main.UserInteractor;
 import hu.bme.onlab.model.Post;
 import hu.bme.onlab.onlab2.R;
 import io.fabric.sdk.android.Fabric;
@@ -63,7 +62,22 @@ public class MainActivity extends AppCompatActivity
         postListAdapter = new PostListAdapter();
         listPostRecyclerView.setAdapter(postListAdapter);
 
+        listPostRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                // True if we currently don't load and we can't scroll down anymore.
+                if(!progressDialog.isShowing() && !recyclerView.canScrollVertically(1)) {
+                    MainPresenter.getInstance().loadPosts();
+                }
+            }
+        });
+
         progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Töltés");
+        progressDialog.setMessage("Kérem várjon...");
+        progressDialog.setCancelable(false);
     }
 
     @Override
@@ -145,9 +159,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void startLoading() {
-        progressDialog.setTitle("Loading");
-        progressDialog.setMessage("Wait while loading...");
-        progressDialog.setCancelable(false);
         progressDialog.show();
     }
 

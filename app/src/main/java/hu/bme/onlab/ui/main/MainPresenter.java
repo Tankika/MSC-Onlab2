@@ -20,7 +20,7 @@ public class MainPresenter extends Presenter<MainScreen> {
     private AppInteractor appInteractor;
     private PostInteractor postInteractor;
 
-    private int page = 1;
+    private int page = 0;
     private int pageSize = 5;
 
     private MainPresenter() {
@@ -37,6 +37,7 @@ public class MainPresenter extends Presenter<MainScreen> {
 
     @Override
     public void attachScreen(MainScreen screen) {
+        page = 0;
         super.attachScreen(screen);
         EventBus.getDefault().register(this);
     }
@@ -52,16 +53,17 @@ public class MainPresenter extends Presenter<MainScreen> {
         appInteractor.init();
     }
 
-    public void listPosts() {
+    public void loadPosts() {
+        screen.startLoading();
+        page++;
         postInteractor.listPosts(page, pageSize);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onListPostsCompleted(InitCallCompletedEvent event) {
         if(event.getCode() == HttpURLConnection.HTTP_OK) {
-            listPosts();
+            loadPosts();
         }
-        screen.stopLoading();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -71,7 +73,7 @@ public class MainPresenter extends Presenter<MainScreen> {
         if(response != null) {
             screen.refreshPostList(response.getPosts());
         }
+        screen.stopLoading();
     }
-
 
 }

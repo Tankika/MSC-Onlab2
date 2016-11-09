@@ -9,8 +9,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/postListBackground"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="hu.bme.onlab.onlab2.hu.bme.onlab.MainActivity"
+    tools:context="hu.bme.onlab.ui.main.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
     <android.support.v7.widget.RecyclerView
