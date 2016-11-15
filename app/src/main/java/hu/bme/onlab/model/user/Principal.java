@@ -22,9 +22,8 @@
  * limitations under the License.
  */
 
-package hu.bme.onlab.model;
+package hu.bme.onlab.model.user;
 
-import hu.bme.onlab.model.Authority;
 import java.util.*;
 
 import io.swagger.annotations.*;

@@ -1,7 +1,7 @@
 package hu.bme.onlab.interactor.post.event;
 
 import hu.bme.onlab.interactor.ApiCallCompletedEvent;
-import hu.bme.onlab.model.ListPostsResponse;
+import hu.bme.onlab.model.post.ListPostsResponse;
 
 public class ListPostsCallCompletedEvent extends ApiCallCompletedEvent<ListPostsResponse> {
 

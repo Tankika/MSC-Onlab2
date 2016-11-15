@@ -19,7 +19,7 @@ import com.crashlytics.android.Crashlytics;
 
 import java.util.List;
 
-import hu.bme.onlab.model.Post;
+import hu.bme.onlab.model.post.Post;
 import hu.bme.onlab.onlab2.R;
 import io.fabric.sdk.android.Fabric;
 

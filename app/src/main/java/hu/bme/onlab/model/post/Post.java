@@ -22,7 +22,7 @@
  * limitations under the License.
  */
 
-package hu.bme.onlab.model;
+package hu.bme.onlab.model.post;
 
 import java.math.BigDecimal;
 

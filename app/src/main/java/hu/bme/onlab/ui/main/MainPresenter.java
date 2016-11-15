@@ -10,7 +10,7 @@ import hu.bme.onlab.interactor.app.AppInteractor;
 import hu.bme.onlab.interactor.app.event.InitCallCompletedEvent;
 import hu.bme.onlab.interactor.post.PostInteractor;
 import hu.bme.onlab.interactor.post.event.ListPostsCallCompletedEvent;
-import hu.bme.onlab.model.ListPostsResponse;
+import hu.bme.onlab.model.post.ListPostsResponse;
 import hu.bme.onlab.ui.Presenter;
 
 public class MainPresenter extends Presenter<MainScreen> {

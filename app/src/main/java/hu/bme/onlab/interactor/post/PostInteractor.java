@@ -5,8 +5,8 @@ import org.greenrobot.eventbus.EventBus;
 import java.math.BigDecimal;
 
 import hu.bme.onlab.interactor.post.event.ListPostsCallCompletedEvent;
-import hu.bme.onlab.model.ListPostsRequest;
-import hu.bme.onlab.model.ListPostsResponse;
+import hu.bme.onlab.model.post.ListPostsRequest;
+import hu.bme.onlab.model.post.ListPostsResponse;
 import hu.bme.onlab.network.RetrofitFactory;
 import hu.bme.onlab.network.post.PostApi;
 import retrofit2.Call;

@@ -22,38 +22,30 @@
  * limitations under the License.
  */
 
-package hu.bme.onlab.model;
+package hu.bme.onlab.model.user;
 
-import java.math.BigDecimal;
 
 import io.swagger.annotations.*;
-
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
 @ApiModel(description = "")
-public class ListPostsRequest  {
+public class Authority  {
+  
+  public enum AuthorityEnum {
+     ROLE_USER,  ROLE_ADMIN, 
+  };
+  @SerializedName("authority")
+  private AuthorityEnum authority = null;
 
-  @SerializedName("page")
-  private BigDecimal page = null;
-  @SerializedName("pageSize")
-  private BigDecimal pageSize = null;
-
+  /**
+   **/
   @ApiModelProperty(value = "")
-  public BigDecimal getPage() {
-    return page;
+  public AuthorityEnum getAuthority() {
+    return authority;
   }
-  public void setPage(BigDecimal page) {
-    this.page = page;
-  }
-
-  @ApiModelProperty(value = "")
-  public BigDecimal getPageSize() {
-    return pageSize;
-  }
-  public void setPageSize(BigDecimal pageSize) {
-    this.pageSize = pageSize;
+  public void setAuthority(AuthorityEnum authority) {
+    this.authority = authority;
   }
 
 
@@ -65,26 +57,23 @@ public class ListPostsRequest  {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ListPostsRequest listPostsRequest = (ListPostsRequest) o;
-    return (page == null ? listPostsRequest.page == null : page.equals(listPostsRequest.page)) &&
-        (pageSize == null ? listPostsRequest.pageSize == null : pageSize.equals(listPostsRequest.pageSize));
+    Authority authority = (Authority) o;
+    return (authority == null ? authority.authority == null : authority.equals(authority.authority));
   }
 
   @Override
   public int hashCode() {
     int result = 17;
-    result = 31 * result + (page == null ? 0: page.hashCode());
-    result = 31 * result + (pageSize == null ? 0: pageSize.hashCode());
+    result = 31 * result + (authority == null ? 0: authority.hashCode());
     return result;
   }
 
   @Override
   public String toString()  {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ListPostsRequest {\n");
+    sb.append("class Authority {\n");
     
-    sb.append("  page: ").append(page).append("\n");
-    sb.append("  pageSize: ").append(pageSize).append("\n");
+    sb.append("  authority: ").append(authority).append("\n");
     sb.append("}\n");
     return sb.toString();
   }

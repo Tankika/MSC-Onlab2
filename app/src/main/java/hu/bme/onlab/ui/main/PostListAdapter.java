@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import hu.bme.onlab.model.Post;
+import hu.bme.onlab.model.post.Post;
 import hu.bme.onlab.onlab2.R;
 
 public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHolder> {
