@@ -1,6 +1,8 @@
-package hu.bme.onlab.interactor.main;
+package hu.bme.onlab.interactor.user;
 
 import android.util.Base64;
+
+import org.greenrobot.eventbus.EventBus;
 
 import hu.bme.onlab.model.user.SignupRequest;
 import hu.bme.onlab.model.user.User;
@@ -18,17 +20,20 @@ public class UserInteractor {
         userApi = RetrofitFactory.createRetrofit("user/").create(UserApi.class);
     }
 
-    public void getUser(String email, String password) {
+    public void login(String email, String password) {
         String authorization = "Basic " + Base64.encodeToString((email + ":" + password).getBytes(), Base64.NO_WRAP);
 
         userApi.getUser(authorization).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
+                LoginCompletedEvent event = new LoginCompletedEvent(response.code(), response.body());
+                EventBus.getDefault().post(event);
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-
+                LoginCompletedEvent event = new LoginCompletedEvent(t);
+                EventBus.getDefault().post(event);
             }
         });
     }
