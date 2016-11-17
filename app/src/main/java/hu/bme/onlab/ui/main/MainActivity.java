@@ -26,6 +26,7 @@ import hu.bme.onlab.model.post.Post;
 import hu.bme.onlab.network.NetworkSessionStore;
 import hu.bme.onlab.onlab2.R;
 import hu.bme.onlab.ui.login.LoginActivity;
+import hu.bme.onlab.ui.signup.SignupActivity;
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity
@@ -175,7 +176,8 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_signup) {
-
+            Intent intent = new Intent(this, SignupActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_logout) {
             MainPresenter.getInstance().logout();
         }
