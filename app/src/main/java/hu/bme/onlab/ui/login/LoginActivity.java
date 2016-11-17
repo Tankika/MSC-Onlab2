@@ -50,12 +50,12 @@ public class LoginActivity extends AppCompatActivity implements LoginScreen {
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                View focusedView = getCurrentFocus();
-                if (focusedView == null) {
-                    focusedView = new View(view.getContext());
-                }
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+//                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+//                View focusedView = getCurrentFocus();
+//                if (focusedView == null) {
+//                    focusedView = new View(view.getContext());
+//                }
+//                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
                 attemptLogin();
             }

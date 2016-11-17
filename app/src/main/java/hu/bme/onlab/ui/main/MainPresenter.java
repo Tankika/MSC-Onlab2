@@ -42,7 +42,6 @@ public class MainPresenter extends Presenter<MainScreen> {
 
     @Override
     public void attachScreen(MainScreen screen) {
-        page = 0;
         super.attachScreen(screen);
         EventBus.getDefault().register(this);
     }
@@ -51,6 +50,14 @@ public class MainPresenter extends Presenter<MainScreen> {
     public void detachScreen() {
         EventBus.getDefault().unregister(this);
         super.detachScreen();
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
     }
 
     public void init() {

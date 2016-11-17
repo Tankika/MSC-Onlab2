@@ -24,6 +24,7 @@
 
 package hu.bme.onlab.model.post;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import io.swagger.annotations.*;
@@ -31,7 +32,7 @@ import com.google.gson.annotations.SerializedName;
 
 
 @ApiModel(description = "")
-public class Post  {
+public class Post implements Serializable {
   
   @SerializedName("categoryName")
   private String categoryName = null;

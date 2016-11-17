@@ -18,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.crashlytics.android.Crashlytics;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import hu.bme.onlab.model.post.Post;
@@ -33,11 +35,16 @@ public class MainActivity extends AppCompatActivity
     private ProgressDialog progressDialog;
     private NavigationView navigationView;
 
+    public static final String BUNDLE_POSTS_KEY = "POSTS";
+    public static final String BUNDLE_PAGE_KEY = "PAGE";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar =  (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -82,14 +89,20 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        MainPresenter.getInstance().attachScreen(this);
+        if(savedInstanceState == null) {
+            MainPresenter.getInstance().init();
+        } else {
+            MainPresenter.getInstance().setPage(savedInstanceState.getInt(BUNDLE_PAGE_KEY, 0));
+            List<Post> savedPosts = (ArrayList<Post>)savedInstanceState.getSerializable(BUNDLE_POSTS_KEY);
+            refreshPostList(savedPosts != null ? savedPosts : new ArrayList<Post>());
+        }
     }
 
     @Override
-    protected void onStart() {
+    protected void onResume() {
         super.onStart();
-        MainPresenter.getInstance().attachScreen(this);
-
-        MainPresenter.getInstance().init();
 
         setMenuVisibilities();
     }
@@ -108,9 +121,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
+
         MainPresenter.getInstance().detachScreen();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(BUNDLE_POSTS_KEY, new ArrayList<>(postListAdapter.getPosts()));
+        outState.putInt(BUNDLE_PAGE_KEY, MainPresenter.getInstance().getPage());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
