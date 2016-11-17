@@ -3,6 +3,7 @@ package hu.bme.onlab.ui.login;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,6 +50,13 @@ public class LoginActivity extends AppCompatActivity implements LoginScreen {
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                View focusedView = getCurrentFocus();
+                if (focusedView == null) {
+                    focusedView = new View(view.getContext());
+                }
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
                 attemptLogin();
             }
         });
@@ -159,6 +168,11 @@ public class LoginActivity extends AppCompatActivity implements LoginScreen {
     @Override
     public void stopLoading() {
         showProgress(false);
+    }
+
+    @Override
+    public void onLoginSuccess() {
+        finish();
     }
 }
 

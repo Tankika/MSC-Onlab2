@@ -17,7 +17,7 @@ public class RetrofitFactory {
     private RetrofitFactory() {}
 
     @NonNull
-    public static Retrofit createRetrofit(String urlPostFix) {
+    public static Retrofit createRetrofit() {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
                     @Override
@@ -54,7 +54,7 @@ public class RetrofitFactory {
         return new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
-                .baseUrl(NetworkConfig.host + urlPostFix)
+                .baseUrl(NetworkConfig.host)
                 .build();
     }
 }

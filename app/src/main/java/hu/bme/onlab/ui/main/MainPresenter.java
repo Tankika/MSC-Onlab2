@@ -10,7 +10,10 @@ import hu.bme.onlab.interactor.app.AppInteractor;
 import hu.bme.onlab.interactor.app.event.InitCallCompletedEvent;
 import hu.bme.onlab.interactor.post.PostInteractor;
 import hu.bme.onlab.interactor.post.event.ListPostsCallCompletedEvent;
+import hu.bme.onlab.interactor.user.UserInteractor;
+import hu.bme.onlab.interactor.user.event.LogoutCompletedEvent;
 import hu.bme.onlab.model.post.ListPostsResponse;
+import hu.bme.onlab.network.NetworkSessionStore;
 import hu.bme.onlab.ui.Presenter;
 
 public class MainPresenter extends Presenter<MainScreen> {
@@ -19,6 +22,7 @@ public class MainPresenter extends Presenter<MainScreen> {
 
     private AppInteractor appInteractor;
     private PostInteractor postInteractor;
+    private UserInteractor userInteractor;
 
     private int page = 0;
     private int pageSize = 5;
@@ -26,6 +30,7 @@ public class MainPresenter extends Presenter<MainScreen> {
     private MainPresenter() {
         appInteractor = new AppInteractor();
         postInteractor = new PostInteractor();
+        userInteractor = new UserInteractor();
     }
 
     public static MainPresenter getInstance() {
@@ -59,6 +64,11 @@ public class MainPresenter extends Presenter<MainScreen> {
         postInteractor.listPosts(page, pageSize);
     }
 
+    public void logout() {
+        screen.startLoading();
+        userInteractor.logout();
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onListPostsCompleted(InitCallCompletedEvent event) {
         if(event.getCode() == HttpURLConnection.HTTP_OK) {
@@ -72,6 +82,15 @@ public class MainPresenter extends Presenter<MainScreen> {
 
         if(response != null) {
             screen.refreshPostList(response.getPosts());
+        }
+        screen.stopLoading();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLogoutCompleted(LogoutCompletedEvent event) {
+        if(event.getCode() == HttpURLConnection.HTTP_OK) {
+            NetworkSessionStore.setUser(null);
+            screen.setMenuVisibilities();
         }
         screen.stopLoading();
     }

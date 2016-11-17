@@ -21,6 +21,7 @@ import com.crashlytics.android.Crashlytics;
 import java.util.List;
 
 import hu.bme.onlab.model.post.Post;
+import hu.bme.onlab.network.NetworkSessionStore;
 import hu.bme.onlab.onlab2.R;
 import hu.bme.onlab.ui.login.LoginActivity;
 import io.fabric.sdk.android.Fabric;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity
 
     private PostListAdapter postListAdapter;
     private ProgressDialog progressDialog;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +56,6 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
         RecyclerView listPostRecyclerView = (RecyclerView) findViewById(R.id.post_list);
         listPostRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
@@ -80,6 +79,9 @@ public class MainActivity extends AppCompatActivity
         progressDialog.setTitle("Töltés");
         progressDialog.setMessage("Kérem várjon...");
         progressDialog.setCancelable(false);
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -88,6 +90,21 @@ public class MainActivity extends AppCompatActivity
         MainPresenter.getInstance().attachScreen(this);
 
         MainPresenter.getInstance().init();
+
+        setMenuVisibilities();
+    }
+
+    @Override
+    public void setMenuVisibilities() {
+        if(NetworkSessionStore.getUser() != null) {
+            navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_signup).setVisible(false);
+        } else {
+            navigationView.getMenu().findItem(R.id.nav_logout).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_login).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_signup).setVisible(true);
+        }
     }
 
     @Override
@@ -133,19 +150,13 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_login) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_signup) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_logout) {
+            MainPresenter.getInstance().logout();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

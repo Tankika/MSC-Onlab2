@@ -18,7 +18,7 @@ public class PostInteractor {
     private PostApi postApi;
 
     public PostInteractor() {
-        postApi = RetrofitFactory.createRetrofit("post/").create(PostApi.class);
+        postApi = RetrofitFactory.createRetrofit().create(PostApi.class);
     }
 
     public void listPosts(int page, int pageSize) {

@@ -8,6 +8,6 @@ import retrofit2.http.POST;
 
 public interface PostApi {
 
-    @POST("listPosts")
+    @POST("post/listPosts")
     public Call<ListPostsResponse> listPosts(@Body ListPostsRequest listPostsRequest);
 }

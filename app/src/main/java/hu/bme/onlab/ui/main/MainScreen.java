@@ -7,5 +7,7 @@ import hu.bme.onlab.ui.ScreenWithLoader;
 
 public interface MainScreen extends ScreenWithLoader {
 
+    void setMenuVisibilities();
+
     void refreshPostList(List<Post> posts);
 }

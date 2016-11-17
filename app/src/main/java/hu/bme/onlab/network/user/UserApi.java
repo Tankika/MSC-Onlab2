@@ -11,9 +11,12 @@ import retrofit2.http.POST;
 
 public interface UserApi {
 
-    @GET("user")
+    @GET("user/user")
     public Call<User> getUser(@Header("Authorization") String authorization);
 
-    @POST("signup")
+    @POST("user/signup")
     public Call<Void> signUp(@Body SignupRequest signupRequest);
+
+    @POST("/logout")
+    public Call<Void> logout();
 }

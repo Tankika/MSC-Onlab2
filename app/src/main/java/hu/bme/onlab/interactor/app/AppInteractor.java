@@ -14,7 +14,7 @@ public class AppInteractor {
     AppApi appApi;
 
     public AppInteractor() {
-        appApi = RetrofitFactory.createRetrofit("").create(AppApi.class);
+        appApi = RetrofitFactory.createRetrofit().create(AppApi.class);
     }
 
     public void init() {

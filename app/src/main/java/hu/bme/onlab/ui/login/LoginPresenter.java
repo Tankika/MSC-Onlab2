@@ -6,13 +6,10 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.net.HttpURLConnection;
 
-import hu.bme.onlab.interactor.app.event.InitCallCompletedEvent;
-import hu.bme.onlab.interactor.user.LoginCompletedEvent;
+import hu.bme.onlab.interactor.user.event.LoginCompletedEvent;
 import hu.bme.onlab.interactor.user.UserInteractor;
-import hu.bme.onlab.interactor.post.event.ListPostsCallCompletedEvent;
-import hu.bme.onlab.model.post.ListPostsResponse;
+import hu.bme.onlab.network.NetworkSessionStore;
 import hu.bme.onlab.ui.Presenter;
-import hu.bme.onlab.ui.main.MainScreen;
 
 public class LoginPresenter extends Presenter<LoginScreen> {
 
@@ -51,7 +48,9 @@ public class LoginPresenter extends Presenter<LoginScreen> {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onLoginCompleted(LoginCompletedEvent event) {
         if(event.getCode() == HttpURLConnection.HTTP_OK) {
+            NetworkSessionStore.setUser(event.getResponse());
             screen.stopLoading();
+            screen.onLoginSuccess();
         }
     }
 

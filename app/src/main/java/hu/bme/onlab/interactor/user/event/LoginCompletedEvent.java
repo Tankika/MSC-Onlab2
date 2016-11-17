@@ -1,4 +1,4 @@
-package hu.bme.onlab.interactor.user;
+package hu.bme.onlab.interactor.user.event;
 
 import hu.bme.onlab.interactor.ApiCallCompletedEvent;
 import hu.bme.onlab.model.user.User;
