@@ -1,5 +1,8 @@
 package hu.bme.onlab.ui.main;
 
+import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +20,9 @@ import java.util.List;
 
 import hu.bme.onlab.model.post.Post;
 import hu.bme.onlab.onlab2.R;
+import hu.bme.onlab.ui.details.DetailsActivity;
 
-public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHolder> {
+class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHolder> {
 
     final private List<Post> posts = new ArrayList<>();
 
@@ -33,7 +37,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Post post = posts.get(position);
+        final Post post = posts.get(position);
 
         holder.title.setText(post.getTitle());
         holder.category.setText(post.getCategoryName());
@@ -60,6 +64,17 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
         } else {
             holder.price.setVisibility(View.VISIBLE);
         }
+
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = v.getContext();
+                Intent intent = new Intent(context, DetailsActivity.class);
+                intent.putExtra(DetailsActivity.INTENT_EXTRA_POST_ID, post.getId().intValue());
+
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -67,16 +82,17 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
         return posts.size();
     }
 
-    protected static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView title;
-        public ImageView mapImage;
-        public TextView price;
-        public TextView city;
-        public TextView date;
-        public TextView category;
+        ImageView mapImage;
+        TextView price;
+        TextView city;
+        TextView date;
+        TextView category;
+        CardView cardView;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
             title = (TextView) itemView.findViewById(R.id.post_title);
@@ -85,10 +101,11 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
             city = (TextView) itemView.findViewById(R.id.post_city);
             date = (TextView) itemView.findViewById(R.id.post_date);
             category = (TextView) itemView.findViewById(R.id.post_category);
+            cardView = (CardView) itemView.findViewById(R.id.post_cardview);
         }
     }
 
-    public List<Post> getPosts() {
+    List<Post> getPosts() {
         return posts;
     }
 }

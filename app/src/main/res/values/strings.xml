@@ -22,4 +22,6 @@
     <string name="title_activity_signup">Regisztráció</string>
     <string name="error_passwords_not_match">A megadott jelszavaknak meg kell egyezniük</string>
     <string name="action_sign_up">Regisztráció</string>
+    <string name="title_activity_details">DetailsActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>

@@ -4,7 +4,9 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.math.BigDecimal;
 
+import hu.bme.onlab.interactor.post.event.GetPostCallCompletedEvent;
 import hu.bme.onlab.interactor.post.event.ListPostsCallCompletedEvent;
+import hu.bme.onlab.model.post.GetPostResponse;
 import hu.bme.onlab.model.post.ListPostsRequest;
 import hu.bme.onlab.model.post.ListPostsResponse;
 import hu.bme.onlab.network.RetrofitFactory;
@@ -36,6 +38,22 @@ public class PostInteractor {
             @Override
             public void onFailure(Call<ListPostsResponse> call, Throwable t) {
                 ListPostsCallCompletedEvent event = new ListPostsCallCompletedEvent(t);
+                EventBus.getDefault().post(event);
+            }
+        });
+    }
+
+    public void getPost(int postId) {
+        postApi.getPost(postId).enqueue(new Callback<GetPostResponse>() {
+            @Override
+            public void onResponse(Call<GetPostResponse> call, Response<GetPostResponse> response) {
+                GetPostCallCompletedEvent event = new GetPostCallCompletedEvent(response.code(), response.body());
+                EventBus.getDefault().post(event);
+            }
+
+            @Override
+            public void onFailure(Call<GetPostResponse> call, Throwable t) {
+                GetPostCallCompletedEvent event = new GetPostCallCompletedEvent(t);
                 EventBus.getDefault().post(event);
             }
         });
