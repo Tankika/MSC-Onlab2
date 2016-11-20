@@ -1,4 +1,7 @@
 package hu.bme.onlab.ui.signup;
 
-public interface SignupScreen {
+import hu.bme.onlab.ui.ScreenWithLoader;
+
+public interface SignupScreen extends ScreenWithLoader {
+    void onSignupSuccess();
 }

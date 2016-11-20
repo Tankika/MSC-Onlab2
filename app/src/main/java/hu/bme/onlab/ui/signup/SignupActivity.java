@@ -3,10 +3,9 @@ package hu.bme.onlab.ui.signup;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.support.v7.app.AppCompatActivity;
-
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import hu.bme.onlab.onlab2.R;
 
@@ -61,9 +59,22 @@ public class SignupActivity extends AppCompatActivity implements SignupScreen {
         mProgressView = findViewById(R.id.login_progress);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        SignupPresenter.getInstance().attachScreen(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SignupPresenter.getInstance().detachScreen();
+    }
+
     private void attemptSignup() {
         mEmailView.setError(null);
         mPasswordView.setError(null);
+        mPasswordRepeatView.setError(null);
 
         // hide keyboard
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -75,12 +86,19 @@ public class SignupActivity extends AppCompatActivity implements SignupScreen {
 
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        String passwordRepeat = mPasswordRepeatView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
+            focusView = mPasswordView;
+            cancel = true;
+        }
+
+        if(!isPasswordRepeatValid(password, passwordRepeat)) {
+            mPasswordView.setError(getString(R.string.error_passwords_not_match));
             focusView = mPasswordView;
             cancel = true;
         }
@@ -98,19 +116,20 @@ public class SignupActivity extends AppCompatActivity implements SignupScreen {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            Toast.makeText(this, "Signed up", Toast.LENGTH_LONG);
-//            showProgress(true);
+            SignupPresenter.getInstance().signUp(email, password);
         }
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
+    }
+
+    private boolean isPasswordRepeatValid(String password, String passwordRepeat) {
+        return password.equals(passwordRepeat);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -144,6 +163,21 @@ public class SignupActivity extends AppCompatActivity implements SignupScreen {
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mSignupFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
+    }
+
+    @Override
+    public void startLoading() {
+        showProgress(true);
+    }
+
+    @Override
+    public void stopLoading() {
+        showProgress(false);
+    }
+
+    @Override
+    public void onSignupSuccess() {
+        finish();
     }
 }
 

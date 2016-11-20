@@ -1,11 +1,14 @@
 package hu.bme.onlab.ui.signup;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.net.HttpURLConnection;
 
 import hu.bme.onlab.interactor.user.UserInteractor;
+import hu.bme.onlab.interactor.user.event.SignupCompletedEvent;
 import hu.bme.onlab.ui.Presenter;
-import hu.bme.onlab.ui.login.LoginPresenter;
-import hu.bme.onlab.ui.login.LoginScreen;
 
 public class SignupPresenter extends Presenter<SignupScreen> {
 
@@ -23,6 +26,12 @@ public class SignupPresenter extends Presenter<SignupScreen> {
         }
         return instance;
     }
+
+    public void signUp(String email, String password) {
+        screen.startLoading();
+        userInteractor.signUp(email, password);
+    }
+
     @Override
     public void attachScreen(SignupScreen screen) {
         super.attachScreen(screen);
@@ -33,5 +42,13 @@ public class SignupPresenter extends Presenter<SignupScreen> {
     public void detachScreen() {
         EventBus.getDefault().unregister(this);
         super.detachScreen();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLogoutCompleted(SignupCompletedEvent event) {
+        if(event.getCode() == HttpURLConnection.HTTP_OK) {
+            screen.onSignupSuccess();
+        }
+        screen.stopLoading();
     }
 }
