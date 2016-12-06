@@ -33,7 +33,7 @@ public class DetailsSectionsPagerAdapter extends FragmentPagerAdapter {
                 case 1:
                     return DetailsFragmentMap.newInstance(getPostResponse);
                 case 2:
-                    return DetailsActivity.PlaceholderFragment.newInstance(position + 1);
+                    return DetailsFragmentImage.newInstance(getPostResponse);
                 default:
                     return null;
             }
