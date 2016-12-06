@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -36,8 +37,9 @@ public class MainActivity extends AppCompatActivity
     private ProgressDialog progressDialog;
     private NavigationView navigationView;
 
-    public static final String BUNDLE_POSTS_KEY = "POSTS";
-    public static final String BUNDLE_PAGE_KEY = "PAGE";
+    public static final String BUNDLE_POSTS_KEY = "BUNDLE_POSTS_KEY";
+    public static final String BUNDLE_PAGE_KEY = "BUNDLE_PAGE_KEY";
+    private SwipeRefreshLayout listPostSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +78,21 @@ public class MainActivity extends AppCompatActivity
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                // True if we currently don't load and we can't scroll down anymore.
-                if(!progressDialog.isShowing() && !recyclerView.canScrollVertically(1)) {
-                    MainPresenter.getInstance().loadPosts();
+                if(!progressDialog.isShowing()) {
+                    if(!recyclerView.canScrollVertically(1)) {
+                        // User is at the end of the list and trying to scroll down.
+                        MainPresenter.getInstance().loadPosts();
+                    }
                 }
+            }
+        });
+
+        listPostSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.post_list_swiperefresh);
+        listPostSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                postListAdapter.getPosts().clear();
+                MainPresenter.getInstance().reloadPosts();
             }
         });
 
@@ -200,5 +213,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void stopLoading() {
         progressDialog.dismiss();
+        listPostSwipeRefreshLayout.setRefreshing(false);
     }
 }

@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.google.android.gms.maps.SupportMapFragment;
+
 import hu.bme.onlab.model.post.GetPostResponse;
 
 public class DetailsSectionsPagerAdapter extends FragmentPagerAdapter {
@@ -27,9 +29,9 @@ public class DetailsSectionsPagerAdapter extends FragmentPagerAdapter {
         if(getPostResponse != null) {
             switch (position) {
                 case 0:
-                    return DetailsActivity.PlaceholderFragment.newInstance(position + 1);
+                    return DetailsFragmentMain.newInstance(getPostResponse);
                 case 1:
-                    return DetailsActivity.PlaceholderFragment.newInstance(position + 1);
+                    return DetailsFragmentMap.newInstance(getPostResponse);
                 case 2:
                     return DetailsActivity.PlaceholderFragment.newInstance(position + 1);
                 default:

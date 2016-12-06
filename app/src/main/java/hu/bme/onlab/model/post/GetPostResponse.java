@@ -2,6 +2,7 @@ package hu.bme.onlab.model.post;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
@@ -10,7 +11,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(description = "")
-public class GetPostResponse {
+public class GetPostResponse implements Serializable {
 
     @SerializedName("title")
     private String title;

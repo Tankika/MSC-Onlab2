@@ -23,10 +23,13 @@ import hu.bme.onlab.onlab2.R;
 public class DetailsActivity extends AppCompatActivity implements DetailsScreen {
 
     public static final String INTENT_EXTRA_POST_ID = "INTENT_EXTRA_POST_ID";
+    public final static String BUDNLE_POST_KEY = "BUDNLE_POST_KEY";
 
     private DetailsSectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private ProgressDialog progressDialog;
+
+    private Bundle savedInstanceState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,22 +40,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsScreen 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mSectionsPagerAdapter = new DetailsSectionsPagerAdapter(getSupportFragmentManager());
-
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        this.savedInstanceState = savedInstanceState;
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Töltés");
@@ -63,8 +51,13 @@ public class DetailsActivity extends AppCompatActivity implements DetailsScreen 
 
     @Override
     public void onGetPostSuccess(GetPostResponse getPostResponse) {
-        mSectionsPagerAdapter.setGetPostResponse(getPostResponse);
-        mSectionsPagerAdapter.notifyDataSetChanged();
+        setupSectionsAdapter(getPostResponse);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(BUDNLE_POST_KEY, mSectionsPagerAdapter.getGetPostResponse());
+        super.onSaveInstanceState(outState);
     }
 
     public static class PlaceholderFragment extends Fragment {
@@ -84,7 +77,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsScreen 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_details, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_details_main, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
@@ -97,7 +90,12 @@ public class DetailsActivity extends AppCompatActivity implements DetailsScreen 
         DetailsPresenter.getInstance().attachScreen(this);
 
         Intent intent = getIntent();
-        DetailsPresenter.getInstance().getPost(intent.getIntExtra(INTENT_EXTRA_POST_ID, -1));
+        GetPostResponse savedPost = savedInstanceState != null ? (GetPostResponse)savedInstanceState.getSerializable(BUDNLE_POST_KEY) : null;
+        if(savedPost != null) {
+            setupSectionsAdapter(savedPost);
+        } else {
+            DetailsPresenter.getInstance().getPost(intent.getIntExtra(INTENT_EXTRA_POST_ID, -1));
+        }
     }
 
     @Override
@@ -114,5 +112,16 @@ public class DetailsActivity extends AppCompatActivity implements DetailsScreen 
     @Override
     public void stopLoading() {
         progressDialog.dismiss();
+    }
+
+    private void setupSectionsAdapter(GetPostResponse getPostResponse) {
+        mSectionsPagerAdapter = new DetailsSectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter.setGetPostResponse(getPostResponse);
+
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
     }
 }

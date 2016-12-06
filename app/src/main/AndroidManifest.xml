@@ -3,10 +3,8 @@
     package="hu.bme.onlab.onlab2">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -40,6 +38,9 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="ed8466278c8e95a0cceef086894b7dd6808152f8" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCPneN_9KImqzqziQviiPcCir6X1F-atrY" />
     </application>
 
 </manifest>

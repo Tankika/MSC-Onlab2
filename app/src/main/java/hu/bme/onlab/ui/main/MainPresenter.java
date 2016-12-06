@@ -65,6 +65,11 @@ public class MainPresenter extends Presenter<MainScreen> {
         appInteractor.init();
     }
 
+    public void reloadPosts() {
+        page = 1;
+        postInteractor.listPosts(page, pageSize);
+    }
+
     public void loadPosts() {
         screen.startLoading();
         page++;
@@ -77,7 +82,7 @@ public class MainPresenter extends Presenter<MainScreen> {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onListPostsCompleted(InitCallCompletedEvent event) {
+    public void onInitCompleted(InitCallCompletedEvent event) {
         if(event.getCode() == HttpURLConnection.HTTP_OK) {
             loadPosts();
         }
