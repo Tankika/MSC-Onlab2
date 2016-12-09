@@ -1,10 +1,14 @@
 package hu.bme.onlab.ui.main;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +31,7 @@ import hu.bme.onlab.model.post.Post;
 import hu.bme.onlab.network.NetworkSessionStore;
 import hu.bme.onlab.onlab2.R;
 import hu.bme.onlab.ui.login.LoginActivity;
+import hu.bme.onlab.ui.newpost.NewPostActivity;
 import hu.bme.onlab.ui.signup.SignupActivity;
 import io.fabric.sdk.android.Fabric;
 
@@ -36,10 +41,16 @@ public class MainActivity extends AppCompatActivity
     private PostListAdapter postListAdapter;
     private ProgressDialog progressDialog;
     private NavigationView navigationView;
-
-    public static final String BUNDLE_POSTS_KEY = "BUNDLE_POSTS_KEY";
-    public static final String BUNDLE_PAGE_KEY = "BUNDLE_PAGE_KEY";
     private SwipeRefreshLayout listPostSwipeRefreshLayout;
+
+    private static final String BUNDLE_POSTS_KEY = "BUNDLE_POSTS_KEY";
+    private static final String BUNDLE_PAGE_KEY = "BUNDLE_PAGE_KEY";
+
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +123,14 @@ public class MainActivity extends AppCompatActivity
             List<Post> savedPosts = (ArrayList<Post>)savedInstanceState.getSerializable(BUNDLE_POSTS_KEY);
             refreshPostList(savedPosts != null ? savedPosts : new ArrayList<Post>());
         }
+
+        if(PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
     }
 
     @Override
@@ -124,10 +143,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void setMenuVisibilities() {
         if(NetworkSessionStore.getUser() != null) {
+            navigationView.getMenu().findItem(R.id.nav_newpost).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_signup).setVisible(false);
         } else {
+            navigationView.getMenu().findItem(R.id.nav_newpost).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_login).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_signup).setVisible(true);
@@ -158,28 +179,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.main, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -189,6 +188,9 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_signup) {
             Intent intent = new Intent(this, SignupActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_newpost) {
+            Intent intent = new Intent(this, NewPostActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
             MainPresenter.getInstance().logout();

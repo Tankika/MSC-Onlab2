@@ -32,13 +32,12 @@ public class DetailsFragmentImage extends DetailsFragmentBase {
         View rootView = inflater.inflate(R.layout.fragment_details_image, container, false);
 
         sliderShow = (SliderLayout) rootView.findViewById(R.id.slider);
+        sliderShow.setPresetIndicator(SliderLayout.PresetIndicators.Center_Top);
         for (Long id : getPostResponse.getImageIds()) {
             DefaultSliderView slideView = new DefaultSliderView(getContext());
             slideView.image(NetworkConfig.host + "post/downloadImage/" + id);
-//            slideView.image("https://lh6.ggpht.com/kktCUrKvuLPxZsywDppiRMto8ECfr3Kv70RWLnRogXqJEydm9cMdLlxDNVMaxsHoDyA=h310-rw");
             sliderShow.addSlider(slideView);
         }
-        sliderShow.setCustomIndicator((PagerIndicator)rootView.findViewById(R.id.slider_indicator));
 
         return rootView;
     }

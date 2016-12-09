@@ -14,6 +14,10 @@
             android:visible="false"
             android:title="Regisztráció" />
         <item
+            android:id="@+id/nav_newpost"
+            android:visible="false"
+            android:title="Új hírdetés" />
+        <item
             android:id="@+id/nav_logout"
             android:visible="false"
             android:title="Kilépés" />

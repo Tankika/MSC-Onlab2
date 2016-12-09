@@ -6,6 +6,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.net.HttpURLConnection;
 
+import hu.bme.onlab.interactor.post.PostInteractor;
 import hu.bme.onlab.interactor.user.event.LoginCompletedEvent;
 import hu.bme.onlab.interactor.user.UserInteractor;
 import hu.bme.onlab.network.NetworkSessionStore;
@@ -16,9 +17,11 @@ public class LoginPresenter extends Presenter<LoginScreen> {
     private static LoginPresenter instance;
 
     private UserInteractor userInteractor;
+    private PostInteractor postInteractor;
 
     private LoginPresenter() {
         userInteractor = new UserInteractor();
+        postInteractor = new PostInteractor();
     }
 
     public static LoginPresenter getInstance() {
@@ -49,9 +52,13 @@ public class LoginPresenter extends Presenter<LoginScreen> {
     public void onLoginCompleted(LoginCompletedEvent event) {
         if(event.getCode() == HttpURLConnection.HTTP_OK) {
             NetworkSessionStore.setUser(event.getResponse());
-            screen.stopLoading();
             screen.onLoginSuccess();
+        } else if(event.getCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+            screen.onLoginFail();
+        } else {
+            screen.onLoginError();
         }
+        screen.stopLoading();
     }
 
 }

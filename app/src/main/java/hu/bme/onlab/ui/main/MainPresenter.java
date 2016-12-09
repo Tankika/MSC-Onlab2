@@ -100,10 +100,8 @@ public class MainPresenter extends Presenter<MainScreen> {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onLogoutCompleted(LogoutCompletedEvent event) {
-        if(event.getCode() == HttpURLConnection.HTTP_OK) {
-            NetworkSessionStore.setUser(null);
-            screen.setMenuVisibilities();
-        }
+        NetworkSessionStore.setUser(null);
+        screen.setMenuVisibilities();
         screen.stopLoading();
     }
 

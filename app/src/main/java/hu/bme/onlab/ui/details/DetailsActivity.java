@@ -3,19 +3,11 @@ package hu.bme.onlab.ui.details;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import android.widget.TextView;
 
 import hu.bme.onlab.model.post.GetPostResponse;
 import hu.bme.onlab.onlab2.R;
@@ -51,7 +43,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsScreen 
 
     @Override
     public void onGetPostSuccess(GetPostResponse getPostResponse) {
-        setupSectionsAdapter(getPostResponse);
+        setupDynamicParts(getPostResponse);
     }
 
     @Override
@@ -68,7 +60,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsScreen 
         Intent intent = getIntent();
         GetPostResponse savedPost = savedInstanceState != null ? (GetPostResponse)savedInstanceState.getSerializable(BUDNLE_POST_KEY) : null;
         if(savedPost != null) {
-            setupSectionsAdapter(savedPost);
+            setupDynamicParts(savedPost);
         } else {
             DetailsPresenter.getInstance().getPost(intent.getIntExtra(INTENT_EXTRA_POST_ID, -1));
         }
@@ -90,7 +82,9 @@ public class DetailsActivity extends AppCompatActivity implements DetailsScreen 
         progressDialog.dismiss();
     }
 
-    private void setupSectionsAdapter(GetPostResponse getPostResponse) {
+    private void setupDynamicParts(GetPostResponse getPostResponse) {
+        setTitle(getPostResponse.getCategoryName());
+
         mSectionsPagerAdapter = new DetailsSectionsPagerAdapter(getSupportFragmentManager());
         mSectionsPagerAdapter.setGetPostResponse(getPostResponse);
 

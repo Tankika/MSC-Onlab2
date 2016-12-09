@@ -1,7 +1,6 @@
 package hu.bme.onlab.interactor.user;
 
 import android.util.Base64;
-import android.util.EventLog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -10,7 +9,7 @@ import hu.bme.onlab.interactor.user.event.LogoutCompletedEvent;
 import hu.bme.onlab.interactor.user.event.SignupCompletedEvent;
 import hu.bme.onlab.model.user.SignupRequest;
 import hu.bme.onlab.model.user.User;
-import hu.bme.onlab.network.RetrofitFactory;
+import hu.bme.onlab.network.CustomRetrofitFactory;
 import hu.bme.onlab.network.user.UserApi;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,7 +20,7 @@ public class UserInteractor {
     private UserApi userApi;
 
     public UserInteractor() {
-        userApi = RetrofitFactory.createRetrofit().create(UserApi.class);
+        userApi = CustomRetrofitFactory.createRetrofit().create(UserApi.class);
     }
 
     public void login(String email, String password) {

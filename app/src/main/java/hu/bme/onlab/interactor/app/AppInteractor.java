@@ -3,7 +3,7 @@ package hu.bme.onlab.interactor.app;
 import org.greenrobot.eventbus.EventBus;
 
 import hu.bme.onlab.interactor.app.event.InitCallCompletedEvent;
-import hu.bme.onlab.network.RetrofitFactory;
+import hu.bme.onlab.network.CustomRetrofitFactory;
 import hu.bme.onlab.network.app.AppApi;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -14,7 +14,7 @@ public class AppInteractor {
     AppApi appApi;
 
     public AppInteractor() {
-        appApi = RetrofitFactory.createRetrofit().create(AppApi.class);
+        appApi = CustomRetrofitFactory.createRetrofit().create(AppApi.class);
     }
 
     public void init() {

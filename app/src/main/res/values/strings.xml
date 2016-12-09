@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">Onlab2</string>
+    <string name="app_name">Szolgáltatás kereső</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_send">Küldés</string>
     <string name="title_activity_login">Bejelentkezés</string>
 
     <!-- Strings related to login -->
@@ -22,9 +22,11 @@
     <string name="title_activity_signup">Regisztráció</string>
     <string name="error_passwords_not_match">A megadott jelszavaknak meg kell egyezniük</string>
     <string name="action_sign_up">Regisztráció</string>
-    <string name="title_activity_details">DetailsActivity</string>
+    <string name="title_activity_details">Részletek</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main">Szolgáltatások</string>
+    <string name="title_activity_newPost">Új hírdetés</string>
 </resources>

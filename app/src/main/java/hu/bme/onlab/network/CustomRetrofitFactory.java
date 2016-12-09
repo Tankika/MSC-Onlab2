@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -12,9 +13,9 @@ import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RetrofitFactory {
+public class CustomRetrofitFactory {
 
-    private RetrofitFactory() {}
+    private CustomRetrofitFactory() {}
 
     @NonNull
     public static Retrofit createRetrofit() {
@@ -49,6 +50,9 @@ public class RetrofitFactory {
                         return response;
                     }
                 })
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
                 .build();
 
         return new Retrofit.Builder()

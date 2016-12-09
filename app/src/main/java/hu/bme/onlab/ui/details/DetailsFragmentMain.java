@@ -26,7 +26,7 @@ public class DetailsFragmentMain extends DetailsFragmentBase {
 
         View rootView = inflater.inflate(R.layout.fragment_details_main, container, false);
 
-        TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+        TextView textView = (TextView) rootView.findViewById(R.id.details_title);
         textView.setText(getPostResponse.getTitle());
 
         return rootView;

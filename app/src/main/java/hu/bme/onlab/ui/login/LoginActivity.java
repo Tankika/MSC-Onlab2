@@ -3,8 +3,10 @@ package hu.bme.onlab.ui.login;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -153,5 +155,31 @@ public class LoginActivity extends AppCompatActivity implements LoginScreen {
     public void onLoginSuccess() {
         finish();
     }
+
+    @Override
+    public void onLoginFail() {
+        new AlertDialog.Builder(this)
+                .setTitle("Hiba!")
+                .setMessage("Hibás felhasználónév vagy jelszó!")
+                .setNeutralButton("Ok", new DialogDismissListener())
+                .show();
+    }
+
+    @Override
+    public void onLoginError() {
+        new AlertDialog.Builder(this)
+                .setTitle("Hiba!")
+                .setMessage("Ismeretlen hiba történt!")
+                .setNeutralButton("Ok", new DialogDismissListener())
+                .show();
+    }
+
+    private class DialogDismissListener implements DialogInterface.OnClickListener {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+        }
+    }
+
 }
 
