@@ -3,7 +3,6 @@ package hu.bme.onlab.ui.login;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import hu.bme.onlab.onlab2.R;
+import hu.bme.onlab.ui.DialogDismissListener;
 
 public class LoginActivity extends AppCompatActivity implements LoginScreen {
 
@@ -172,13 +172,6 @@ public class LoginActivity extends AppCompatActivity implements LoginScreen {
                 .setMessage("Ismeretlen hiba történt!")
                 .setNeutralButton("Ok", new DialogDismissListener())
                 .show();
-    }
-
-    private class DialogDismissListener implements DialogInterface.OnClickListener {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-        }
     }
 
 }

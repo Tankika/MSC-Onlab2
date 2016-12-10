@@ -10,20 +10,30 @@ import android.webkit.MimeTypeMap;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import hu.bme.onlab.interactor.post.PostInteractor;
+import hu.bme.onlab.interactor.post.event.GetCategoriesCallCompletedEvent;
+import hu.bme.onlab.interactor.post.event.SendPostCallCompletedEvent;
+import hu.bme.onlab.model.post.GetCategoriesData;
 import hu.bme.onlab.model.post.ImageData;
 import hu.bme.onlab.model.post.SendPostData;
+import hu.bme.onlab.network.NetworkSessionStore;
 import hu.bme.onlab.ui.Presenter;
 
 public class NewPostPresenter extends Presenter<NewPostScreen> {
@@ -50,12 +60,12 @@ public class NewPostPresenter extends Presenter<NewPostScreen> {
     @Override
     public void attachScreen(NewPostScreen screen) {
         super.attachScreen(screen);
-//        EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
     public void detachScreen() {
-//        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
         super.detachScreen();
     }
 
@@ -76,9 +86,13 @@ public class NewPostPresenter extends Presenter<NewPostScreen> {
         tempPhotoUri = null;
     }
 
-    public void sendPost(Context context) {
+    public void getCategories() {
         screen.startLoading();
-        SendPostData sendPostData = new SendPostData();
+        postInteractor.getCategories();
+    }
+
+    public void sendPost(SendPostData sendPostData, Context context) {
+        screen.startLoading();
 
         for (Uri uri : photoUriSet) {
             ImageData imageData = null;
@@ -98,6 +112,7 @@ public class NewPostPresenter extends Presenter<NewPostScreen> {
                 continue;
             }
         }
+        photoUriSet.clear();
 
         postInteractor.sendPost(sendPostData);
     }
@@ -182,5 +197,25 @@ public class NewPostPresenter extends Presenter<NewPostScreen> {
         );
 
         return image;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSendPostCompleted(SendPostCallCompletedEvent event) {
+        if(event.getCode() == HttpURLConnection.HTTP_OK) {
+            screen.onSendPostSuccess();
+        } else {
+            screen.onSendPostFailure();
+        }
+        screen.stopLoading();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onGetCategoriesCompleted(GetCategoriesCallCompletedEvent event) {
+        if(event.getCode() == HttpURLConnection.HTTP_OK) {
+            screen.onGetCategoriesSuccess(event.getResponse().getCategories());
+        } else {
+            screen.onGetCategoriesFailure();
+        }
+        screen.stopLoading();
     }
 }

@@ -11,8 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import hu.bme.onlab.interactor.post.event.GetCategoriesCallCompletedEvent;
 import hu.bme.onlab.interactor.post.event.GetPostCallCompletedEvent;
 import hu.bme.onlab.interactor.post.event.ListPostsCallCompletedEvent;
+import hu.bme.onlab.interactor.post.event.SendPostCallCompletedEvent;
+import hu.bme.onlab.model.post.GetCategoriesResponse;
 import hu.bme.onlab.model.post.GetPostResponse;
 import hu.bme.onlab.model.post.ImageData;
 import hu.bme.onlab.model.post.ListPostsRequest;
@@ -71,6 +74,22 @@ public class PostInteractor {
         });
     }
 
+    public void getCategories() {
+        postApi.getCategories().enqueue(new Callback<GetCategoriesResponse>() {
+            @Override
+            public void onResponse(Call<GetCategoriesResponse> call, Response<GetCategoriesResponse> response) {
+                GetCategoriesCallCompletedEvent event = new GetCategoriesCallCompletedEvent(response.code(), response.body());
+                EventBus.getDefault().post(event);
+            }
+
+            @Override
+            public void onFailure(Call<GetCategoriesResponse> call, Throwable t) {
+                GetCategoriesCallCompletedEvent event = new GetCategoriesCallCompletedEvent(t);
+                EventBus.getDefault().post(event);
+            }
+        });
+    }
+
     public void sendPost(SendPostData sendPostData) {
         List<MultipartBody.Part> images = new ArrayList<>();
         for (int i = 0; i < sendPostData.getImageDataList().size(); i++) {
@@ -99,12 +118,14 @@ public class PostInteractor {
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                System.out.println("");
+                SendPostCallCompletedEvent event = new SendPostCallCompletedEvent(response.code(), response.body());
+                EventBus.getDefault().post(event);
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                System.out.println("");
+                SendPostCallCompletedEvent event = new SendPostCallCompletedEvent(t);
+                EventBus.getDefault().post(event);
             }
         });
     }

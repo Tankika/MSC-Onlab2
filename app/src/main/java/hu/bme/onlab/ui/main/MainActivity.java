@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity
     private ProgressDialog progressDialog;
     private NavigationView navigationView;
     private SwipeRefreshLayout listPostSwipeRefreshLayout;
+    private FloatingActionButton fab;
 
     private static final String BUNDLE_POSTS_KEY = "BUNDLE_POSTS_KEY";
     private static final String BUNDLE_PAGE_KEY = "BUNDLE_PAGE_KEY";
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
+
+    private static final int REQUEST_CODE_NEW_POST = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,12 +65,11 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar =  (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                navigateToNewPost();
             }
         });
 
@@ -126,16 +128,16 @@ public class MainActivity extends AppCompatActivity
 
         if(PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             ActivityCompat.requestPermissions(
-                    this,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
+                this,
+                PERMISSIONS_STORAGE,
+                REQUEST_EXTERNAL_STORAGE
             );
         }
     }
 
     @Override
     protected void onResume() {
-        super.onStart();
+        super.onResume();
 
         setMenuVisibilities();
     }
@@ -147,11 +149,13 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_login).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_signup).setVisible(false);
+            fab.setVisibility(View.VISIBLE);
         } else {
             navigationView.getMenu().findItem(R.id.nav_newpost).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_login).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_signup).setVisible(true);
+            fab.setVisibility(View.GONE);
         }
     }
 
@@ -190,8 +194,7 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, SignupActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_newpost) {
-            Intent intent = new Intent(this, NewPostActivity.class);
-            startActivity(intent);
+            navigateToNewPost();
         } else if (id == R.id.nav_logout) {
             MainPresenter.getInstance().logout();
         }
@@ -199,6 +202,20 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void navigateToNewPost() {
+        Intent intent = new Intent(this, NewPostActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_NEW_POST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_CODE_NEW_POST && resultCode == RESULT_OK) {
+            MainPresenter.getInstance().reloadPosts();
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override

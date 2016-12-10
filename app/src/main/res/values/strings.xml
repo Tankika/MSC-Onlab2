@@ -15,7 +15,7 @@
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
+    <string name="error_field_required">A mező megadása kötelező</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
@@ -29,4 +29,23 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_main">Szolgáltatások</string>
     <string name="title_activity_newPost">Új hírdetés</string>
+    <string name="action_attach">Kép</string>
+    <string name="action_clear_pictures">Képek törlése</string>
+    <string name="hint_title">Cím</string>
+    <string name="hint_description">Leírás</string>
+    <string name="description_section_header">Szolgáltatás leírása</string>
+    <string name="error_field_minlength">Minimum hossz: %d</string>
+    <string name="error_field_maxlength">Maximum hossz: %d</string>
+    <string name="hint_postal_code">Irányítószám</string>
+    <string name="error_field_pattern">Nem megfelelő formátum!</string>
+    <string name="hint_price_min">Min ár</string>
+    <string name="hint_price_max">Max ár</string>
+    <string name="error_field_priceformat">Csak nem negatív, egész szám adható meg!</string>
+    <string name="error_field_minValue">Minimum érték: %d</string>
+    <string name="error_field_maxValue">Maximum érték: %d</string>
+    <string name="error_field_price_min_more_than_max">A minimumnak kisebbnek kell lennie a maximumnál!</string>
+    <string name="details_section_header">Szolgáltatás adatai</string>
+    <string name="advertiser_section_header">Hírdető adatai</string>
+    <string name="hint_name">Hírdető neve</string>
+    <string name="hint_phone">Hírdető telefonszáma</string>
 </resources>

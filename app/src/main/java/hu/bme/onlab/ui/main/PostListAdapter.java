@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,8 +53,8 @@ class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHolder> {
         holder.date.setText(dateFormat.format(creationDate));
 
         String priceString = "";
-        String formattedPriceMin = post.getPriceMin() != null ? NumberFormat.getInstance().format(post.getPriceMin()) : "";
-        String formattedPriceMax = post.getPriceMax() != null ? NumberFormat.getInstance().format(post.getPriceMax()) : "";
+        String formattedPriceMin = post.getPriceMin() != null && !BigDecimal.ZERO.equals(post.getPriceMin()) ? NumberFormat.getInstance().format(post.getPriceMin()) : "";
+        String formattedPriceMax = post.getPriceMax() != null && !BigDecimal.ZERO.equals(post.getPriceMax()) ? NumberFormat.getInstance().format(post.getPriceMax()) : "";
         priceString += !formattedPriceMin.isEmpty() ? formattedPriceMin + " Ft-tól" : "";
         priceString += " ";
         priceString += !formattedPriceMax.isEmpty() ? formattedPriceMax + " Ft-ig" : "";

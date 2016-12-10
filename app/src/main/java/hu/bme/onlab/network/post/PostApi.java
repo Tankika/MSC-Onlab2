@@ -2,6 +2,7 @@ package hu.bme.onlab.network.post;
 
 import java.util.List;
 
+import hu.bme.onlab.model.post.GetCategoriesResponse;
 import hu.bme.onlab.model.post.GetPostResponse;
 import hu.bme.onlab.model.post.ListPostsRequest;
 import hu.bme.onlab.model.post.ListPostsResponse;
@@ -22,6 +23,9 @@ public interface PostApi {
 
     @GET("post/getPost/{id}")
     public Call<GetPostResponse> getPost(@Path("id") int postId);
+
+    @GET("post/getCategories")
+    public Call<GetCategoriesResponse> getCategories();
 
     @Multipart
     @POST("post/sendPost")
