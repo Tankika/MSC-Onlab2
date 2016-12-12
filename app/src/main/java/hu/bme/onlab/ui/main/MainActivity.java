@@ -104,7 +104,6 @@ public class MainActivity extends AppCompatActivity
         listPostSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                postListAdapter.getPosts().clear();
                 MainPresenter.getInstance().reloadPosts();
             }
         });
@@ -118,12 +117,14 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         MainPresenter.getInstance().attachScreen(this);
-        if(savedInstanceState == null) {
+        if(NetworkSessionStore.getSessionId() == null) {
             MainPresenter.getInstance().init();
-        } else {
+        } else if(savedInstanceState != null) {
             MainPresenter.getInstance().setPage(savedInstanceState.getInt(BUNDLE_PAGE_KEY, 0));
             List<Post> savedPosts = (ArrayList<Post>)savedInstanceState.getSerializable(BUNDLE_POSTS_KEY);
             refreshPostList(savedPosts != null ? savedPosts : new ArrayList<Post>());
+        } else {
+            MainPresenter.getInstance().reloadPosts();
         }
 
         if(PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -216,6 +217,12 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public void clearPostList() {
+        postListAdapter.getPosts().clear();
+        postListAdapter.notifyDataSetChanged();
     }
 
     @Override

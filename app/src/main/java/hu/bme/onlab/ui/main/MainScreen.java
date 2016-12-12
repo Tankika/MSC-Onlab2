@@ -9,5 +9,7 @@ public interface MainScreen extends ScreenWithLoader {
 
     void setMenuVisibilities();
 
+    void clearPostList();
+
     void refreshPostList(List<Post> posts);
 }

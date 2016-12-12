@@ -66,6 +66,8 @@ public class MainPresenter extends Presenter<MainScreen> {
     }
 
     public void reloadPosts() {
+        screen.startLoading();
+        screen.clearPostList();
         page = 1;
         postInteractor.listPosts(page, pageSize);
     }
