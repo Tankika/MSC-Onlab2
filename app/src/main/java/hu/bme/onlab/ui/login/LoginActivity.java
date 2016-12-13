@@ -18,7 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import hu.bme.onlab.onlab2.R;
-import hu.bme.onlab.ui.DialogDismissListener;
+import hu.bme.onlab.ui.common.DialogDismissListener;
 
 public class LoginActivity extends AppCompatActivity implements LoginScreen {
 

@@ -1,4 +1,4 @@
-package hu.bme.onlab.ui;
+package hu.bme.onlab.ui.common;
 
 public class Presenter<S> {
     protected S screen;

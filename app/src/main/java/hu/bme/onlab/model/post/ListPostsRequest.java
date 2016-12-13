@@ -24,7 +24,9 @@
 
 package hu.bme.onlab.model.post;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Calendar;
 
 import io.swagger.annotations.*;
 
@@ -32,12 +34,26 @@ import com.google.gson.annotations.SerializedName;
 
 
 @ApiModel(description = "")
-public class ListPostsRequest  {
+public class ListPostsRequest implements Serializable {
 
   @SerializedName("page")
   private BigDecimal page = null;
   @SerializedName("pageSize")
   private BigDecimal pageSize = null;
+  @SerializedName("title")
+  private String title = null;
+  @SerializedName("priceMin")
+  private Integer priceMin = null;
+  @SerializedName("priceMax")
+  private Integer priceMax = null;
+    @SerializedName("city")
+    private String city = null;
+    @SerializedName("category")
+    private Long category = null;
+    @SerializedName("startDate")
+    private Calendar startDate = null;
+    @SerializedName("endDate")
+    private Calendar endDate = null;
 
   @ApiModelProperty(value = "")
   public BigDecimal getPage() {
@@ -55,36 +71,112 @@ public class ListPostsRequest  {
     this.pageSize = pageSize;
   }
 
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+    @ApiModelProperty(value = "")
+    public String getTitle() {
+        return title;
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+    public void setTitle(String title) {
+        this.title = title;
     }
-    ListPostsRequest listPostsRequest = (ListPostsRequest) o;
-    return (page == null ? listPostsRequest.page == null : page.equals(listPostsRequest.page)) &&
-        (pageSize == null ? listPostsRequest.pageSize == null : pageSize.equals(listPostsRequest.pageSize));
-  }
 
-  @Override
-  public int hashCode() {
-    int result = 17;
-    result = 31 * result + (page == null ? 0: page.hashCode());
-    result = 31 * result + (pageSize == null ? 0: pageSize.hashCode());
-    return result;
-  }
+    @ApiModelProperty(value = "")
+    public Integer getPriceMin() {
+        return priceMin;
+    }
+    public void setPriceMin(Integer priceMin) {
+        this.priceMin = priceMin;
+    }
 
-  @Override
-  public String toString()  {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class ListPostsRequest {\n");
-    
-    sb.append("  page: ").append(page).append("\n");
-    sb.append("  pageSize: ").append(pageSize).append("\n");
-    sb.append("}\n");
-    return sb.toString();
-  }
+    @ApiModelProperty(value = "")
+    public Integer getPriceMax() {
+        return priceMax;
+    }
+    public void setPriceMax(Integer priceMax) {
+        this.priceMax = priceMax;
+    }
+
+    @ApiModelProperty(value = "")
+    public String getCity() {
+        return city;
+    }
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    @ApiModelProperty(value = "")
+    public Long getCategory() {
+        return category;
+    }
+    public void setCategory(Long category) {
+        this.category = category;
+    }
+
+    @ApiModelProperty(value = "")
+    public Calendar getStartDate() {
+        return startDate;
+    }
+    public void setStartDate(Calendar startDate) {
+        this.startDate = startDate;
+    }
+
+    @ApiModelProperty(value = "")
+    public Calendar getEndDate() {
+        return endDate;
+    }
+    public void setEndDate(Calendar endDate) {
+        this.endDate = endDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ListPostsRequest)) return false;
+
+        ListPostsRequest that = (ListPostsRequest) o;
+
+        if (page != null ? !page.equals(that.page) : that.page != null) return false;
+        if (pageSize != null ? !pageSize.equals(that.pageSize) : that.pageSize != null)
+            return false;
+        if (title != null ? !title.equals(that.title) : that.title != null) return false;
+        if (priceMin != null ? !priceMin.equals(that.priceMin) : that.priceMin != null)
+            return false;
+        if (priceMax != null ? !priceMax.equals(that.priceMax) : that.priceMax != null)
+            return false;
+        if (city != null ? !city.equals(that.city) : that.city != null) return false;
+        if (category != null ? !category.equals(that.category) : that.category != null)
+            return false;
+        if (startDate != null ? !startDate.equals(that.startDate) : that.startDate != null)
+            return false;
+        return endDate != null ? endDate.equals(that.endDate) : that.endDate == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = page != null ? page.hashCode() : 0;
+        result = 31 * result + (pageSize != null ? pageSize.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (priceMin != null ? priceMin.hashCode() : 0);
+        result = 31 * result + (priceMax != null ? priceMax.hashCode() : 0);
+        result = 31 * result + (city != null ? city.hashCode() : 0);
+        result = 31 * result + (category != null ? category.hashCode() : 0);
+        result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
+        result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ListPostsRequest{" +
+                "page=" + page +
+                ", pageSize=" + pageSize +
+                ", title='" + title + '\'' +
+                ", priceMin=" + priceMin +
+                ", priceMax=" + priceMax +
+                ", city=" + city +
+                ", category=" + category +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                '}';
+    }
 }

@@ -177,17 +177,11 @@
 
                     </LinearLayout>
 
-                    <android.support.design.widget.TextInputLayout
+                    <Spinner
+                        android:id="@+id/category"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <Spinner
-                            android:id="@+id/category"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"></Spinner>
-
-                    </android.support.design.widget.TextInputLayout>
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"></Spinner>
 
                 </LinearLayout>
 

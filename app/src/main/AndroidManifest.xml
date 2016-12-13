@@ -33,8 +33,7 @@
         <activity
             android:name="hu.bme.onlab.ui.details.DetailsActivity"
             android:label="@string/title_activity_details"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName="hu.bme.onlab.ui.main.MainActivity">
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="hu.bme.onlab.ui.main.MainActivity" />
@@ -42,8 +41,17 @@
         <activity
             android:name="hu.bme.onlab.ui.newpost.NewPostActivity"
             android:label="@string/title_activity_newPost"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName="hu.bme.onlab.ui.main.MainActivity">
+            android:parentActivityName="hu.bme.onlab.ui.main.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="hu.bme.onlab.ui.main.MainActivity" />
+        </activity>
+        <activity
+            android:name="hu.bme.onlab.ui.filter.FilterActivity"
+            android:label="@string/title_activity_filter"
+            android:parentActivityName="hu.bme.onlab.ui.main.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="hu.bme.onlab.ui.main.MainActivity" />
@@ -56,7 +64,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
 
         <meta-data

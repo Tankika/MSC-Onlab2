@@ -1,4 +1,4 @@
-package hu.bme.onlab.ui;
+package hu.bme.onlab.ui.common;
 
 import android.content.DialogInterface;
 

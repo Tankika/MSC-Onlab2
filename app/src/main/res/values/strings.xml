@@ -48,4 +48,11 @@
     <string name="advertiser_section_header">Hírdető adatai</string>
     <string name="hint_name">Hírdető neve</string>
     <string name="hint_phone">Hírdető telefonszáma</string>
+    <string name="action_clear_filter">Törlés</string>
+    <string name="action_filter">Szűrés</string>
+    <string name="title_activity_filter">Szűrés</string>
+    <string name="action_done">Rendben</string>
+    <string name="hint_city">Város</string>
+    <string name="hint_date_from">Kezdő dátum</string>
+    <string name="hint_date_to">Végső dátum</string>
 </resources>

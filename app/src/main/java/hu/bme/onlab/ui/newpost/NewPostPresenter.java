@@ -19,22 +19,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import hu.bme.onlab.interactor.post.PostInteractor;
 import hu.bme.onlab.interactor.post.event.GetCategoriesCallCompletedEvent;
 import hu.bme.onlab.interactor.post.event.SendPostCallCompletedEvent;
-import hu.bme.onlab.model.post.GetCategoriesData;
 import hu.bme.onlab.model.post.ImageData;
 import hu.bme.onlab.model.post.SendPostData;
-import hu.bme.onlab.network.NetworkSessionStore;
-import hu.bme.onlab.ui.Presenter;
+import hu.bme.onlab.ui.common.Presenter;
 
 public class NewPostPresenter extends Presenter<NewPostScreen> {
 
@@ -211,6 +207,10 @@ public class NewPostPresenter extends Presenter<NewPostScreen> {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGetCategoriesCompleted(GetCategoriesCallCompletedEvent event) {
+        if(screen == null) {
+            return;
+        }
+
         if(event.getCode() == HttpURLConnection.HTTP_OK) {
             screen.onGetCategoriesSuccess(event.getResponse().getCategories());
         } else {

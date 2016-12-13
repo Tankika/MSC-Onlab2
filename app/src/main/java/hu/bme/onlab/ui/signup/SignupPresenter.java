@@ -8,7 +8,7 @@ import java.net.HttpURLConnection;
 
 import hu.bme.onlab.interactor.user.UserInteractor;
 import hu.bme.onlab.interactor.user.event.SignupCompletedEvent;
-import hu.bme.onlab.ui.Presenter;
+import hu.bme.onlab.ui.common.Presenter;
 
 public class SignupPresenter extends Presenter<SignupScreen> {
 

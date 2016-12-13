@@ -1,9 +1,12 @@
 package hu.bme.onlab.ui.main;
 
+import android.support.annotation.NonNull;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 
 import hu.bme.onlab.interactor.app.AppInteractor;
@@ -12,9 +15,10 @@ import hu.bme.onlab.interactor.post.PostInteractor;
 import hu.bme.onlab.interactor.post.event.ListPostsCallCompletedEvent;
 import hu.bme.onlab.interactor.user.UserInteractor;
 import hu.bme.onlab.interactor.user.event.LogoutCompletedEvent;
+import hu.bme.onlab.model.post.ListPostsRequest;
 import hu.bme.onlab.model.post.ListPostsResponse;
 import hu.bme.onlab.network.NetworkSessionStore;
-import hu.bme.onlab.ui.Presenter;
+import hu.bme.onlab.ui.common.Presenter;
 
 public class MainPresenter extends Presenter<MainScreen> {
 
@@ -65,17 +69,30 @@ public class MainPresenter extends Presenter<MainScreen> {
         appInteractor.init();
     }
 
-    public void reloadPosts() {
+    public void reloadPosts(ListPostsRequest listPostsRequest) {
         screen.startLoading();
         screen.clearPostList();
         page = 1;
-        postInteractor.listPosts(page, pageSize);
+
+        ListPostsRequest request = setupListPostsRequest(listPostsRequest);
+        postInteractor.listPosts(request);
     }
 
-    public void loadPosts() {
+    public void loadPosts(ListPostsRequest listPostsRequest) {
         screen.startLoading();
         page++;
-        postInteractor.listPosts(page, pageSize);
+
+        ListPostsRequest request = setupListPostsRequest(listPostsRequest);
+        postInteractor.listPosts(request);
+    }
+
+    @NonNull
+    private ListPostsRequest setupListPostsRequest(ListPostsRequest listPostsRequest) {
+        ListPostsRequest request = listPostsRequest != null ? listPostsRequest : new ListPostsRequest();
+        request.setPage(BigDecimal.valueOf(page));
+        request.setPageSize(BigDecimal.valueOf(pageSize));
+
+        return request;
     }
 
     public void logout() {
@@ -86,7 +103,7 @@ public class MainPresenter extends Presenter<MainScreen> {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onInitCompleted(InitCallCompletedEvent event) {
         if(event.getCode() == HttpURLConnection.HTTP_OK) {
-            loadPosts();
+            loadPosts(null);
         }
     }
 

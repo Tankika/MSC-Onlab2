@@ -73,6 +73,12 @@ public class DetailsActivity extends AppCompatActivity implements DetailsScreen 
     }
 
     @Override
+    public boolean onSupportNavigateUp () {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     public void startLoading() {
         progressDialog.show();
     }

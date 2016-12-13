@@ -38,11 +38,7 @@ public class PostInteractor {
         postApi = CustomRetrofitFactory.createRetrofit().create(PostApi.class);
     }
 
-    public void listPosts(int page, int pageSize) {
-        ListPostsRequest listPostsRequest = new ListPostsRequest();
-        listPostsRequest.setPage(BigDecimal.valueOf(page));
-        listPostsRequest.setPageSize(BigDecimal.valueOf(pageSize));
-
+    public void listPosts(ListPostsRequest listPostsRequest) {
         postApi.listPosts(listPostsRequest).enqueue(new Callback<ListPostsResponse>() {
             @Override
             public void onResponse(Call<ListPostsResponse> call, Response<ListPostsResponse> response) {

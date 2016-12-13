@@ -10,7 +10,7 @@ import hu.bme.onlab.interactor.post.PostInteractor;
 import hu.bme.onlab.interactor.user.event.LoginCompletedEvent;
 import hu.bme.onlab.interactor.user.UserInteractor;
 import hu.bme.onlab.network.NetworkSessionStore;
-import hu.bme.onlab.ui.Presenter;
+import hu.bme.onlab.ui.common.Presenter;
 
 public class LoginPresenter extends Presenter<LoginScreen> {
 

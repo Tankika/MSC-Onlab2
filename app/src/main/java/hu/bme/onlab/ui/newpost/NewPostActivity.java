@@ -33,7 +33,8 @@ import java.util.regex.Pattern;
 import hu.bme.onlab.model.post.GetCategoriesData;
 import hu.bme.onlab.model.post.SendPostData;
 import hu.bme.onlab.onlab2.R;
-import hu.bme.onlab.ui.DialogDismissListener;
+import hu.bme.onlab.ui.common.DialogDismissListener;
+import hu.bme.onlab.ui.common.CategorySpinnerElement;
 
 public class NewPostActivity extends AppCompatActivity implements NewPostScreen {
 
@@ -49,7 +50,7 @@ public class NewPostActivity extends AppCompatActivity implements NewPostScreen 
     private EditText editTextName;
     private EditText editTextPhone;
 
-    List<GetCategoriesData> savedCategories;
+    private List<GetCategoriesData> savedCategories;
 
     private static final int SELECT_PICTURE_REQUEST_CODE = 1;
 
@@ -69,7 +70,7 @@ public class NewPostActivity extends AppCompatActivity implements NewPostScreen 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Hírdetés küldése");
+        progressDialog.setTitle("Töltés");
         progressDialog.setMessage("Kérem várjon...");
         progressDialog.setCancelable(false);
 
@@ -96,7 +97,7 @@ public class NewPostActivity extends AppCompatActivity implements NewPostScreen 
 
         final LinearLayout advertiserSection = (LinearLayout)findViewById(R.id.advertiser_section);
         TextView advertiserSectionHeader = (TextView)findViewById(R.id.advertiser_section_header);
-        detailsSectionHeader.setOnClickListener(new View.OnClickListener() {
+        advertiserSectionHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toggleSectionVisibility(advertiserSection);
@@ -376,6 +377,12 @@ public class NewPostActivity extends AppCompatActivity implements NewPostScreen 
     }
 
     @Override
+    public boolean onSupportNavigateUp () {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     public void onBackPressed() {
         NewPostPresenter.getInstance().getPhotoUriSet().clear();
         super.onBackPressed();
@@ -479,23 +486,6 @@ public class NewPostActivity extends AppCompatActivity implements NewPostScreen 
                 .setTitle("Hiba!")
                 .setMessage("Ismeretlen hiba az oldal betöltésekor!")
                 .setNeutralButton("Ok", new DialogDismissListener());
-    }
-
-    private class CategorySpinnerElement {
-        private GetCategoriesData getCategoriesData;
-
-        public CategorySpinnerElement(GetCategoriesData getCategoriesData) {
-            this.getCategoriesData = getCategoriesData;
-        }
-
-        public GetCategoriesData getGetCategoriesData() {
-            return getCategoriesData;
-        }
-
-        @Override
-        public String toString() {
-            return getCategoriesData.getName();
-        }
     }
 
 }

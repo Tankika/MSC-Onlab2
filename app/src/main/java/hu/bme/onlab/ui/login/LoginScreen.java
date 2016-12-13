@@ -1,6 +1,6 @@
 package hu.bme.onlab.ui.login;
 
-import hu.bme.onlab.ui.ScreenWithLoader;
+import hu.bme.onlab.ui.common.ScreenWithLoader;
 
 public interface LoginScreen extends ScreenWithLoader {
     void onLoginSuccess();

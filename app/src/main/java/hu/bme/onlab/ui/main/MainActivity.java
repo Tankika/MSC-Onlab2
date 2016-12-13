@@ -25,11 +25,14 @@ import com.crashlytics.android.Crashlytics;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
+import hu.bme.onlab.model.post.ListPostsRequest;
 import hu.bme.onlab.model.post.Post;
 import hu.bme.onlab.network.NetworkSessionStore;
 import hu.bme.onlab.onlab2.R;
+import hu.bme.onlab.ui.filter.FilterActivity;
 import hu.bme.onlab.ui.login.LoginActivity;
 import hu.bme.onlab.ui.newpost.NewPostActivity;
 import hu.bme.onlab.ui.signup.SignupActivity;
@@ -44,8 +47,13 @@ public class MainActivity extends AppCompatActivity
     private SwipeRefreshLayout listPostSwipeRefreshLayout;
     private FloatingActionButton fab;
 
+    private MenuItem clearFilterMenuItem;
+
+    private ListPostsRequest savedListPostsRequest;
+
     private static final String BUNDLE_POSTS_KEY = "BUNDLE_POSTS_KEY";
     private static final String BUNDLE_PAGE_KEY = "BUNDLE_PAGE_KEY";
+    private static final String BUNDLE_LIST_POSTS_REQUEST_KEY = "BUNDLE_LIST_POSTS_REQUEST_KEY";
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -54,6 +62,7 @@ public class MainActivity extends AppCompatActivity
     };
 
     private static final int REQUEST_CODE_NEW_POST = 2;
+    private static final int REQUEST_CODE_FILTER = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +103,7 @@ public class MainActivity extends AppCompatActivity
                 if(!progressDialog.isShowing()) {
                     if(!recyclerView.canScrollVertically(1)) {
                         // User is at the end of the list and trying to scroll down.
-                        MainPresenter.getInstance().loadPosts();
+                        MainPresenter.getInstance().loadPosts(savedListPostsRequest);
                     }
                 }
             }
@@ -104,7 +113,7 @@ public class MainActivity extends AppCompatActivity
         listPostSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                MainPresenter.getInstance().reloadPosts();
+                MainPresenter.getInstance().reloadPosts(savedListPostsRequest);
             }
         });
 
@@ -122,9 +131,10 @@ public class MainActivity extends AppCompatActivity
         } else if(savedInstanceState != null) {
             MainPresenter.getInstance().setPage(savedInstanceState.getInt(BUNDLE_PAGE_KEY, 0));
             List<Post> savedPosts = (ArrayList<Post>)savedInstanceState.getSerializable(BUNDLE_POSTS_KEY);
+            savedListPostsRequest = (ListPostsRequest) savedInstanceState.getSerializable(BUNDLE_LIST_POSTS_REQUEST_KEY);
             refreshPostList(savedPosts != null ? savedPosts : new ArrayList<Post>());
         } else {
-            MainPresenter.getInstance().reloadPosts();
+            MainPresenter.getInstance().reloadPosts(savedListPostsRequest);
         }
 
         if(PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -171,6 +181,7 @@ public class MainActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(BUNDLE_POSTS_KEY, new ArrayList<>(postListAdapter.getPosts()));
         outState.putInt(BUNDLE_PAGE_KEY, MainPresenter.getInstance().getPage());
+        outState.putSerializable(BUNDLE_LIST_POSTS_REQUEST_KEY, savedListPostsRequest);
         super.onSaveInstanceState(outState);
     }
 
@@ -181,6 +192,33 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        clearFilterMenuItem = menu.findItem(R.id.action_clear_filter);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_clear_filter:
+                savedListPostsRequest = null;
+
+                clearFilterMenuItem.setVisible(false);
+                MainPresenter.getInstance().reloadPosts(savedListPostsRequest);
+
+                return true;
+            case R.id.action_filter:
+                Intent intent = new Intent(this, FilterActivity.class);
+                intent.putExtra(FilterActivity.EXTRA_LIST_POSTS_REQUEST, savedListPostsRequest);
+                startActivityForResult(intent, REQUEST_CODE_FILTER);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -212,8 +250,23 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_CODE_NEW_POST && resultCode == RESULT_OK) {
-            MainPresenter.getInstance().reloadPosts();
+        if(resultCode == RESULT_OK) {
+            if(requestCode == REQUEST_CODE_NEW_POST) {
+                MainPresenter.getInstance().reloadPosts(savedListPostsRequest);
+            } else if(requestCode == REQUEST_CODE_FILTER) {
+                savedListPostsRequest = new ListPostsRequest();
+
+                savedListPostsRequest.setTitle(data.getStringExtra(FilterActivity.RESULT_EXTRA_TITLE));
+                savedListPostsRequest.setCity(data.getStringExtra(FilterActivity.RESULT_EXTRA_CITY));
+                savedListPostsRequest.setCategory((Long)data.getSerializableExtra(FilterActivity.RESULT_EXTRA_CATEGORY));
+                savedListPostsRequest.setPriceMin((Integer)data.getSerializableExtra(FilterActivity.RESULT_EXTRA_PRICE_MIN));
+                savedListPostsRequest.setPriceMax((Integer)data.getSerializableExtra(FilterActivity.RESULT_EXTRA_PRICE_MAX));
+                savedListPostsRequest.setStartDate((Calendar) data.getSerializableExtra(FilterActivity.RESULT_EXTRA_DATE_FROM));
+                savedListPostsRequest.setEndDate((Calendar)data.getSerializableExtra(FilterActivity.RESULT_EXTRA_DATE_TO));
+
+                clearFilterMenuItem.setVisible(true);
+                MainPresenter.getInstance().reloadPosts(savedListPostsRequest);
+            }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
